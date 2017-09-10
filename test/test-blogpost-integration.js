@@ -83,4 +83,34 @@ describe('Blog Posts API Integration Tests', function(){
         });
     });
   });
+
+  describe('POST endpoint', function(){
+
+    it('should create a new blog post', function(){
+
+      const newPost = postFactory.newPost();
+
+      return chai.request(app)
+        .post('/posts')
+        .send(newPost)
+        .then(function(res){
+          res.should.have.status(201);
+          res.should.be.json;
+          res.should.be.a('object');
+          res.body.should.include.keys('id', 'author', 'content', 'title', 'created');
+          res.body.title.should.deep.equal(newPost.title);
+          res.body.content.should.deep.equal(newPost.content);
+          res.body.author.should.deep.equal(`${newPost.author.firstName} ${newPost.author.lastName}`.trim());
+          assert(res.body.created, newPost.created);
+          return BlogPost.findById(res.body.id);
+        })
+        .then(function(foundPost){
+          assert(foundPost.title, newPost.title);
+          assert(foundPost.content, newPost.content);
+          assert(foundPost.author, newPost.author);
+          assert(foundPost.created, newPost.created);
+        });
+    });
+  });
+
 });
