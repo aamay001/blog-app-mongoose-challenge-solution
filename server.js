@@ -5,7 +5,6 @@ const morgan = require('morgan');
 
 const {DATABASE_URL, PORT} = require('./config');
 const {BlogPost} = require('./models');
-const postFactory = require('./factories/posts.factory');
 
 const app = express();
 
@@ -13,17 +12,6 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 mongoose.Promise = global.Promise;
-
-
-function seedDatabase(){
-  console.info('Seeding database.');
-  let seedData = [];
-  for( let i = 0; i < 10; i++ ){
-    seedData.push(postFactory.newPost());
-  }
-  return BlogPost.insertMany(seedData);
-}
-
 
 app.get('/posts', (req, res) => {
   BlogPost
@@ -134,8 +122,6 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
       if (err) {
         return reject(err);
       }
-
-      // seedDatabase();
       server = app.listen(port, () => {
         console.log(`Your app is listening on port ${port}`);
         resolve();
