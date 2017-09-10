@@ -73,7 +73,6 @@ app.delete('/posts/:id', (req, res) => {
     });
 });
 
-
 app.put('/posts/:id', (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({

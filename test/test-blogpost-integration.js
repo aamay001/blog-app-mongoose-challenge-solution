@@ -146,4 +146,35 @@ describe('Blog Posts API Integration Tests', function(){
           });
     });
   });
+
+  describe('PUT endpoint', function(){
+    it('should update an existing post', function(){
+      const updateData = {
+        author : {
+          firstName : 'Andy',
+          lastName: 'Amaya'
+        },
+
+        title: "My Updated Title"
+      };
+
+      return BlogPost.findOne()
+        .then(function(existingPost){
+          updateData.id = existingPost.id;
+          return chai.request(app)
+            .put(`/posts/${existingPost.id}`)
+            .send(updateData);
+        })
+        .then(function(res){
+          res.should.have.status(204);
+          return BlogPost.findById(updateData.id);
+        })
+        .then(function(post){
+          assert(post.id, updateData.id);
+          assert(post.author, 'Andy Amaya');
+          assert(post.title, updateData.title);
+        });
+    });
+  });
+
 });
