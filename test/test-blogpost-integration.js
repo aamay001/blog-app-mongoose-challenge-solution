@@ -113,37 +113,41 @@ describe('Blog Posts API Integration Tests', function(){
   describe('DELETE endpoints', function(){
     // DELETE '/posts/:id'
     it('should delete an existing post using /posts/:id', function(){
+      let post;
       return BlogPost.findOne()
         .then(function(existingPost){
+          post = existingPost;
           return chai.request(app)
-            .delete(`/posts/${existingPost.id}`)
+            .delete(`/posts/${existingPost._id}`)
             .then(function(res){
               res.should.have.status(204);
             })
-            .then(function(res){
-              return BlogPost.findById(existingPost.id)
-                .then(function(post){
-                  should.not.exist(post);
-                });
-            });
+          })
+          .then(function(res){
+            return BlogPost.findById(post._id)
+              .then(function(_post){
+                should.not.exist(_post);
+              });
           });
     });
     // DELETE '/:id'
     it('should delete an existing post using /:id', function(){
+      let post;
       return BlogPost.findOne()
         .then(function(existingPost){
+          post = existingPost;
           return chai.request(app)
-            .delete(`/${existingPost.id}`)
+            .delete(`/${existingPost._id}`)
             .then(function(res){
               res.should.have.status(204);
-            })
-            .then(function(res){
-              return BlogPost.findById(existingPost.id)
-                .then(function(post){
-                  should.not.exist(post);
-                });
             });
-          });
+        })
+        .then(function(res){
+          return BlogPost.findById(post.id)
+            .then(function(_post){
+              should.not.exist(_post);
+            });
+        });
     });
   });
 
