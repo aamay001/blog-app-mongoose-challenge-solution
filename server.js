@@ -5,20 +5,31 @@ const morgan = require('morgan');
 
 const {DATABASE_URL, PORT} = require('./config');
 const {BlogPost} = require('./models');
+const postFactory = require('./factories/posts.factory');
 
 const app = express();
 
-app.use(morgan('common'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 mongoose.Promise = global.Promise;
+
+
+function seedDatabase(){
+  console.info('Seeding database.');
+  let seedData = [];
+  for( let i = 0; i < 10; i++ ){
+    seedData.push(postFactory.newPost());
+  }
+  return BlogPost.insertMany(seedData);
+}
 
 
 app.get('/posts', (req, res) => {
   BlogPost
     .find()
     .then(posts => {
-      res.json(posts.map(post => post.apiRepr()));
+      res.json({ posts: posts.map(post => post.apiRepr())});
     })
     .catch(err => {
       console.error(err);
@@ -123,6 +134,8 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
       if (err) {
         return reject(err);
       }
+
+      // seedDatabase();
       server = app.listen(port, () => {
         console.log(`Your app is listening on port ${port}`);
         resolve();
@@ -139,15 +152,15 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
 // use it in our integration tests later.
 function closeServer() {
   return mongoose.disconnect().then(() => {
-     return new Promise((resolve, reject) => {
-       console.log('Closing server');
-       server.close(err => {
-           if (err) {
-               return reject(err);
-           }
-           resolve();
-       });
-     });
+    return new Promise((resolve, reject) => {
+      console.log('Closing server');
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
   });
 }
 
