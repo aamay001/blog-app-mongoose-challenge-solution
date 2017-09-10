@@ -1,0 +1,11 @@
+language: node_js
+node_js: node
+services:
+- mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: UkVtwg6gZxNZaqu0R6vvYMBnkecj+r7S7PmZQCIFf8jCoi2EONSyvHWHqBXapLQD8zrIh01a6fo30ldDXi5vnLjE1k98DsyJMMr9wedLptM9jInfSXiBP4TD1+Iv9iX6vQ4ygs9n4C0e80j8kBcdgH2p5NtoHVTogMMaTiSJ+BVayiFUx3PhJb26Oia6FzUQ/9kuM41npuT/ufYPPSKAtkS4sMnE7oJU4BOMapXMvmbAaoy8DoqfJBnk99rrg/mfVZGlgoQ+CLp6LYBzbBDsNUl6XlovhrAwpz9IRYmV/Q5XAEJ7g0xdIC5jIlVAtkz66Nvpj0gxxk9C4N3VqdcRWoKCV3iFL59vrzO7zRw8kuyKf2FOer7bVvs1/UWSYN9wEASsZiVl51aprNmbFC5rb/H1kip0Kk72QRBJJE1+B1D9+z5sudPQkMrnTJ1JwHlA7bJl538zF+YDoUxTFQfI7O/zPQAA9TIGuw3MhmRZdioiBm60uIILZwa4WKj0uKUhOX7EltqjNtG8LZbyDFXqwzucNGcAOQIzROLkB43+dbnZGXu60nonl+llUOmXbRlNNgH+5D9flUH8k28TEU4ahCByiIA8Q0PVn2VMmW/natgLlGVISN2CiZCsuS6mvAhqGu6dOEEGjim6Fof3tpN0nM0Xx+ShYcGtHYvrBf/MQmU=
+  app: infinite-tor-91072
+  on:
+    repo: aamay001/blog-app-mongoose-challenge-solution
