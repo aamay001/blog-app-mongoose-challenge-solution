@@ -44,7 +44,7 @@ describe('Blog Posts API Integration Tests', function(){
     return dropDatabase();
   });
 
-  describe('GET endpoint', function(){
+  describe('GET endpoints', function(){
     it('should return all posts', function(){
       let res;
       return chai.request(app)
@@ -85,11 +85,8 @@ describe('Blog Posts API Integration Tests', function(){
   });
 
   describe('POST endpoint', function(){
-
     it('should create a new blog post', function(){
-
       const newPost = postFactory.newPost();
-
       return chai.request(app)
         .post('/posts')
         .send(newPost)
@@ -113,4 +110,40 @@ describe('Blog Posts API Integration Tests', function(){
     });
   });
 
+  describe('DELETE endpoints', function(){
+    // DELETE '/posts/:id'
+    it('should delete an existing post using /posts/:id', function(){
+      return BlogPost.findOne()
+        .then(function(existingPost){
+          return chai.request(app)
+            .delete(`/posts/${existingPost.id}`)
+            .then(function(res){
+              res.should.have.status(204);
+            })
+            .then(function(res){
+              return BlogPost.findById(existingPost.id)
+                .then(function(post){
+                  should.not.exist(post);
+                });
+            });
+          });
+    });
+    // DELETE '/:id'
+    it('should delete an existing post using /:id', function(){
+      return BlogPost.findOne()
+        .then(function(existingPost){
+          return chai.request(app)
+            .delete(`/${existingPost.id}`)
+            .then(function(res){
+              res.should.have.status(204);
+            })
+            .then(function(res){
+              return BlogPost.findById(existingPost.id)
+                .then(function(post){
+                  should.not.exist(post);
+                });
+            });
+          });
+    });
+  });
 });
